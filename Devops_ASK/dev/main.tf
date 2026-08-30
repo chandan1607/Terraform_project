@@ -6,6 +6,10 @@ resource "azurerm_resource_group" "rg1" {
 module "ServicePrincipal" {
   source                 = "../modules/ServicePrincipal"
   service_principal_name = var.service_principal_name
+
+  depends_on = [
+    azurerm_resource_group.rg1
+  ]
 }
 
 resource "azurerm_role_assignment" "rolespn" {
@@ -14,6 +18,22 @@ resource "azurerm_role_assignment" "rolespn" {
   principal_id         = module.ServicePrincipal.service_principal_object_id
 
   skip_service_principal_aad_check = true
+  depends_on = [
+    module.ServicePrincipal
+  ]
+
+}
+
+resource "azurerm_role_assignment" "rolekv" {
+  scope                = "/subscriptions/${var.SUB_ID}"
+  role_definition_name = "key Vault Contributor"
+  principal_id         = module.ServicePrincipal.service_principal_object_id
+
+  skip_service_principal_aad_check = true
+  depends_on = [
+    module.ServicePrincipal
+  ]
+
 }
 
 module "keyvault" {
@@ -25,12 +45,18 @@ module "keyvault" {
   service_principal_name      = var.service_principal_name
   service_principal_object_id = module.ServicePrincipal.service_principal_object_id
   service_principal_tenant_id = module.ServicePrincipal.service_principal_tenant_id
+   depends_on = [
+    azurerm_role_assignment.rolekv
+  ]
 }
 
 resource "azurerm_key_vault_secret" "sp_secret" {
   name         = "${var.service_principal_name}-client-secret"
   value        = module.ServicePrincipal.client_secret
   key_vault_id = module.keyvault.keyvault_id
+   depends_on = [
+    module.keyvault
+  ]
 }
 
 module "aks" {
@@ -43,6 +69,9 @@ module "aks" {
 
   cluster_name   = var.cluster_name
   node_pool_name = var.node_pool_name
+  depends_on = [
+    module.ServicePrincipal
+  ]
 }
 
 resource "local_file" "kubeconfig" {
