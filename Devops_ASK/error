@@ -1,0 +1,7 @@
+Error: Missing required argument
+│ 
+│   with provider["registry.terraform.io/hashicorp/azurerm"],
+│   on <empty> line 0:
+│   (source code not available)
+│ 
+│ The argument "features" is required, but no definition was found.
