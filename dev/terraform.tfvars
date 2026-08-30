@@ -1,6 +1,0 @@
-rgname                 = "dev-chandan-rg"
-service_principal_name = "dev-chandan-spn"
-keyvault_name          = "dev-chandan-kv-101"
-SUB_ID = "51221053-75c9-46fd-9537-4aa0ded9a89a"
-cluster_name = "dev-chandan-cluster"
-node_pool_name = "devnp"
