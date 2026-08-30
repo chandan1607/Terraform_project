@@ -1,6 +1,0 @@
-rgname                 = "stating-chandan-rg"
-service_principal_name = "stating-chandan-spn"
-keyvault_name          = "stating-chandan-kv-101"
-SUB_ID = "51221053-75c9-46fd-9537-4aa0ded9a89a"
-cluster_name = "stating-chandan-cluster"
-node_pool_name = "statingnp"
